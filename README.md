@@ -1,20 +1,21 @@
 # Moteur de Recommandation E-commerce
 
-**Projet M1SPAR - Python Spark et projets IA avancés**
+## **Projet M1SPAR - Python Spark et projets IA avancés**
 
-## 📋 Description
+### 📋 Description
 
 Moteur de recommandation e-commerce utilisant PySpark ALS pour le collaborative filtering, TensorFlow embeddings pour le deep learning, et Feast pour le feature store.
 
-**Objectifs métier :**
+**Objectifs :**
+
 - Augmenter CTR de 15% vs recommandations random
 - Recommandations personnalisées <50ms latence  
 - Support 10M utilisateurs, 1M produits
 - A/B testing avec significance statistique
 
-## 🏗️ Architecture
+### 🏗️ Architecture
 
-```
+```md
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Data Source   │    │   Processing     │    │   Serving       │
 │                 │    │                  │    │                 │
@@ -24,7 +25,7 @@ Moteur de recommandation e-commerce utilisant PySpark ALS pour le collaborative 
                        └──────────────────┘    └─────────────────┘
 ```
 
-## 🛠️ Stack Technique
+### 🛠️ Stack Technique
 
 - **BigData**: PySpark 3.4, Delta Lake 2.4
 - **ML**: PySpark ALS, TensorFlow 2.14, Scikit-learn
@@ -35,7 +36,7 @@ Moteur de recommandation e-commerce utilisant PySpark ALS pour le collaborative 
 
 ## 📁 Structure du Projet
 
-```
+```md
 moteur_recommandation/
 ├── data/                   # Données brutes et traitées
 ├── notebooks/              # Jupyter notebooks d'exploration
@@ -51,19 +52,22 @@ moteur_recommandation/
 └── docs/                  # Documentation
 ```
 
-## 🚀 Quick Start
+### 🚀 Quick Start
 
 1. Installation des dépendances :
+
 ```bash
 pip install -r requirements.txt
 ```
 
 2. Téléchargement des données :
+
 ```bash
 python src/data/download_data.py
 ```
 
 3. Lancement du pipeline :
+
 ```bash
 python src/main.py
 ```
@@ -71,12 +75,14 @@ python src/main.py
 ## 📊 KPIs et Métriques
 
 **Business KPIs:**
+
 - Click-Through Rate (CTR)
 - Conversion Rate
 - Revenue per User
 - Recommendation Diversity
 
 **Technical Metrics:**
+
 - Latence API (<50ms)
 - Throughput (req/s)
 - Model Accuracy (RMSE, Precision@k)
