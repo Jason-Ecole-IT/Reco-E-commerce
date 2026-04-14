@@ -1,64 +1,73 @@
-# Management Artifact - Moteur recommandation E-commerce
+# Artefacts de gestion - Moteur de recommandation e-commerce
 
-## 1. Introduction
+## Introduction
 
-Ce document présente les artefacts de gestion pour le projet de développement d'un moteur de recommandation pour une platforme e-commerce. Il inclut des informations sur la planification, les ressources, les risques et les livrables du projet.
+Ce document présente les artefacts de gestion du projet, notamment la gouvernance, les rôles, les risques et les livrables. Il aide à structurer le travail et à clarifier les responsabilités.
 
-Ces artefacts ont pour but de clarifier les rôles, d’anticiper les risques, de structurer l’organisation du travail et de définir des indicateurs de succès.
+## Description du projet
 
-## 2. Description du Projet
+Le projet vise à développer un moteur de recommandation pour une plateforme e-commerce avec :
 
-Le projet consiste à développer un moteur de recommandation pour une plateforme e-commerce comprenant:
+- un système de recommandations personnalisées
+- une API de service
+- une interface utilisateur
+- un suivi de la qualité et des performances
+- une documentation complète
 
-- Un système de recommandation basé sur les données de review des clients.
-- Une interface utilisateur pour afficher les recommandations.
-- Une API pour intégrer le moteur de recommandation avec la plateforme e-commerce.
-- Un système de monitoring pour évaluer les performances du moteur de recommandation.
-- Une documentation complète du projet.
-- Une présentation des résultats du projet.
+### Objectifs
 
-### Objectifs Principaux
+- Améliorer l’expérience client
+- Augmenter la conversion et le chiffre d’affaires
+- Assurer une solution scalable
+- Proposer des recommandations fiables sur un large catalogue
 
-- Améliorer l'expérience utilisateur
-- Augmenter les ventes en proposant des produits pertinents
-- Supporter un grand nombre d'utilisateurs simultanément
-- Fournir des recommandations sur un grand nombre de produits
+## Modèle RACI
 
-## 3. Modèle RACI
+| Lettre | Signification | Description |
+| --- | --- | --- |
+| R | Responsable | Exécute la tâche |
+| A | Accountable | Responsable final du résultat |
+| C | Consulté | Fournit des conseils |
+| I | Informé | Tenu informé de l’avancement |
 
-La matrice RACI définit les rôles et responsabilités pour chaque tâche clé du projet.
-
-| Lettre | Signification | Description                       |
-| ------ | ------------- | --------------------------------- |
-| R      | Responsable   | Exécute la tâche                  |
-| A      | Accountable   | Responsable final du résultat     |
-| C      | Consulté      | Fournit des conseils ou expertise |
-| I      | Informé       | Tenu informé de l’avancement      |
-
-Rôles du projet
+### Rôles clés
 
 - **Chef de projet** : coordination globale
-- **Développeur frontend** : interface utilisateur et visualisation
-- **Développeur backend/algorithmique** : Développement du moteur de recommandation et de l'API
-- **Équipe test** : validation fonctionnelle
-- **Parties prenantes** : utilisateurs ou encadrants
+- **Développeur frontend** : interface et visualisation
+- **Développeur backend** : API, services et modèle
+- **Équipe test** : validation fonctionnelle et qualité
+- **Parties prenantes** : encadrants et utilisateurs
 
-| Tâche | Chef de projet | Développeur frontend | Développeur backend | Equipe test | Parties prenantes |
+| Tâche | Chef de projet | Frontend | Backend | Tests | Parties prenantes |
 | --- | --- | --- | --- | --- | --- |
 | Planification | A | R | R | I | I |
-| Développemen du moteur de recommandation | A | I | R | C | I |
-| Développement de l'interface utilisateur | A | R | I | C | I |
-| Développement de l'API | A | I | R | C | I |
+| Développement moteur | A | I | R | C | I |
+| Interface utilisateur | A | R | I | C | I |
+| API de service | A | I | R | C | I |
 | Tests et validation | A | I | I | R | C |
 | Documentation | A | R | R | C | I |
 
 ## Gestion des risques
 
-Le tableau suivant présente les risques potentiels du projet, leurs impacts, leurs probabilités et les stratégies d'atténuation.
-
-| Risque | Impact | Probabilité | Stratégie d'atténuation |
+| Risque | Impact | Probabilité | Plan d’atténuation |
 | --- | --- | --- | --- |
-| Difficulté à installer les dépendances | Elevé | Moyenne | Utiliser des conteneurs Docker pour garantir un environnement de développement cohérent |
-| Problèmes de performance du moteur de recommandation | Elevé | Moyenne | Optimiser les algorithmes et utiliser des techniques de mise en cache |
-| Retards dans le développement | Elevé | Moyenne | Planifier des revues régulières et ajuster les ressources si nécessaire |
-| Problèmes de qualité du code | Elevé | Moyenne | Mettre en place des revues de code et des tests automatisés |
+| Difficultés d’installation | Élevé | Moyenne | Utiliser Docker pour standardiser l’environnement |
+| Performance insuffisante | Élevé | Moyenne | Mettre en place du caching et optimiser les modèles |
+| Retards | Élevé | Moyenne | Suivre l’avancement et revoir la planification régulièrement |
+| Qualité du code insuffisante | Élevé | Moyenne | Revue de code et tests automatisés |
+
+## Artefacts principaux
+
+- Charte du projet
+- Planning détaillé
+- Architecture technique
+- Documentation des métriques
+- Rapport de qualité des données
+- Présentation finale
+
+## Gouvernance
+
+- Points d’avancement quotidiens
+- Revue de sprint à la fin de chaque journée
+- Suivi des risques et actions correctives
+- Communication via canal dédié

@@ -1,247 +1,189 @@
-# Architecture Technique - Moteur de Recommandation E-commerce
+# Architecture technique - Moteur de recommandation e-commerce
 
-## Vue d'Ensemble
+## Vue d’ensemble
 
-Ce document décrit l'architecture technique complète du moteur de recommandation e-commerce utilisant PySpark ALS, TensorFlow embeddings et Feast pour le feature store.
+Ce document présente l’architecture technique du projet, de l’ingestion des données jusqu’au service de recommandation en production.
 
-## Architecture End-to-End
+## Architecture end-to-end
 
-```
-                    +---------------------+
-                    |   Data Sources      |
-                    +---------------------+
-                    | Amazon Reviews v2   |
-                    | Product Metadata    |
-                    | User Interactions  |
-                    +----------+----------+
-                               |
-                    +----------v----------+
-                    |   Data Ingestion   |
-                    +----------+----------+
-                    | PySpark ETL        |
-                    | Delta Lake         |
-                    | Data Validation    |
-                    +----------+----------+
-                               |
-                    +----------v----------+
-                    | Feature Engineering|
-                    +----------+----------+
-                    | Feast Feature Store|
-                    | User/Item Features |
-                    | Temporal Features  |
-                    +----------+----------+
-                               |
-                    +----------v----------+
-                    |   Model Training   |
-                    +----------+----------+
-                    | PySpark ALS        |
-                    | TensorFlow Embed   |
-                    | MLflow Tracking    |
-                    +----------+----------+
-                               |
-                    +----------v----------+
-                    |   Model Serving     |
-                    +----------+----------+
-                    | FastAPI REST API   |
-                    | Redis Cache        |
-                    | Load Balancer      |
-                    +----------+----------+
-                               |
-                    +----------v----------+
-                    |   User Interface   |
-                    +----------+----------+
-                    | Streamlit Dashboard|
-                    | A/B Testing UI     |
-                    | Analytics          |
-                    +---------------------+
+```mermaid
+flowchart LR
+    A[Sources de données] --> B[Ingestion ETL]
+    B --> C[Stockage Delta Lake]
+    C --> D[Feature Store Feast]
+    D --> E[Entraînement des modèles]
+    E --> F[Registry MLflow]
+    F --> G[Service FastAPI]
+    G --> H[Cache Redis]
+    H --> I[Dashboard Streamlit]
 ```
 
-## Composants Techniques
+## Composants techniques
 
-### 1. Data Layer
-- **Source**: Amazon Reviews v2 (Electronics + Clothing)
-- **Format**: JSON Lines compressé (.json.gz)
-- **Volume**: ~1.5GB (Electronics) + ~150MB (Clothing)
-- **Storage**: Delta Lake pour ACID transactions
-- **Validation**: Great Expectations pour la qualité
+### 1. Couche données
 
-### 2. Processing Layer
-- **Framework**: Apache Spark 3.4+ (PySpark)
-- **Orchestration**: MLflow Pipelines
-- **Feature Store**: Feast 0.38
-- **Cache**: Redis 7.0
-- **Monitoring**: Prometheus + Grafana
+- **Sources** : Amazon Reviews (Electronics et Clothing)
+- **Format** : JSON / JSON Lines
+- **Stockage** : Delta Lake pour ACID et réécriture
+- **Validation** : règles de qualité et contrôle des duplications
 
-### 3. Model Layer
-- **Collaborative Filtering**: PySpark ALS
-- **Deep Learning**: TensorFlow 2.14 embeddings
-- **Hybrid Approach**: Combinaison ALS + Content-based
-- **Evaluation**: RMSE, Precision@K, NDCG
+### 2. Traitement
 
-### 4. Serving Layer
-- **API**: FastAPI avec OpenAPI docs
-- **Real-time**: <50ms latence cible
-- **Cache**: Redis pour recommandations
-- **Scaling**: Horizontal avec load balancing
+- **Framework** : PySpark 3.4
+- **ETL** : ingestion, nettoyage, enrichissement, agrégation
+- **Feature Store** : Feast 0.38
+- **Cache** : Redis pour les résultats de recommandations
+- **Monitoring** : Prometheus et Grafana
 
-### 5. Interface Layer
-- **Dashboard**: Streamlit pour analytics
-- **A/B Testing**: Interface de test
-- **Monitoring**: Métriques temps réel
+### 3. Modélisation
 
-## Flux de Données
+- **Collaborative Filtering** : PySpark ALS
+- **Embeddings** : TensorFlow 2.14
+- **Approche hybride** : ALS + contenu pour gérer le cold start
+- **Évaluation** : RMSE, Precision@K, NDCG
 
-### Pipeline ETL (Batch)
-1. **Ingestion**: Chargement des données brutes
-2. **Cleaning**: Validation et nettoyage
-3. **Transformation**: Feature engineering
-4. **Storage**: Sauvegarde dans Delta Lake
+### 4. Serving
 
-### Pipeline ML (Training)
-1. **Feature Extraction**: User/Item features
-2. **Model Training**: ALS + TensorFlow
-3. **Evaluation**: Cross-validation
-4. **Registry**: MLflow Model Registry
+- **API** : FastAPI avec OpenAPI
+- **Temps réel** : cache Redis
+- **Scalabilité** : services conteneurisés
 
-### Pipeline Serving (Real-time)
-1. **Request**: API endpoint appel
-2. **Cache Check**: Redis lookup
-3. **Prediction**: Model inference
-4. **Response**: Recommandations retournées
+### 5. Interface
 
-## Challenges Techniques Identifiés
+- **Dashboard** : Streamlit
+- **A/B testing** : comparaison de variantes
 
-### 1. Cold Start Problem
-- **Users**: 77% avec 1 review (Electronics)
-- **Products**: Distribution inégale
-- **Solution**: Content-based + popularity fallback
+## Flux de données
 
-### 2. Scalabilité
-- **Volume**: 1.6M+ reviews
-- **Users**: 36K+ unique users
-- **Products**: 5K+ unique products
-- **Solution**: Spark distributed computing
+### Pipeline ETL
 
-### 3. Performance
-- **Latence**: <50ms cible
-- **Throughput**: 10K+ req/s
-- **Solution**: Redis cache + model optimization
+1. Ingestion des données brutes
+2. Nettoyage et validation
+3. Feature engineering
+4. Stockage dans Delta Lake
 
-### 4. Data Quality
-- **Missing values**: reviewerName (0.6%)
-- **Bias**: Distribution notes (61% notes 4-5)
-- **Solution**: Data validation + normalization
+### Pipeline ML
 
-## Stack Technique Détaillé
+1. Extraction des features
+2. Entraînement des modèles
+3. Évaluation et comparaison
+4. Enregistrement dans MLflow
 
-### BigData & Processing
-```yaml
-Spark:
-  version: 3.4+
-  features: Adaptive Query Execution, Kryo Serialization
-  
-Delta Lake:
-  version: 2.4+
-  features: ACID transactions, Time Travel
-  
-Feast:
-  version: 0.38
-  features: Feature store, Online serving
-```
+### Pipeline de serving
+
+1. Requête API
+2. Vérification du cache Redis
+3. Inférence modèle
+4. Réponse utilisateur
+
+## Enjeux techniques
+
+### Cold start
+
+- Utilisateurs avec peu ou pas d’historique
+- Stratégie : fallback populaire et recommandations basées sur le contenu
+
+### Scalabilité
+
+- Volume de données important
+- Stratégie : Spark distribué et architecture modulaire
+
+### Performance
+
+- Objectif : latence <50ms
+- Stratégie : cache Redis et optimisation des services
+
+### Qualité des données
+
+- Valeurs manquantes et doublons
+- Stratégie : règles de validation et pipeline automatisé
+
+## Stack technique
+
+### Big Data
+
+- Apache Spark 3.4
+- Delta Lake 2.4
+- Feast 0.38
 
 ### Machine Learning
-```yaml
-PySpark ALS:
-  algorithm: Alternating Least Squares
-  parameters: rank=50, regParam=0.1
-  
-TensorFlow:
-  version: 2.14
-  architecture: Embedding layers
-  training: Distributed training
-  
-MLflow:
-  version: 2.8
-  features: Tracking, Registry, Serving
-```
 
-### APIs & Serving
-```yaml
-FastAPI:
-  version: 0.104
-  features: Async, OpenAPI docs
-  
-Redis:
-  version: 7.0
-  features: In-memory cache, Pub/Sub
-  
-Streamlit:
-  version: 1.28
-  features: Real-time dashboard, Components
-```
+- PySpark ALS
+- TensorFlow 2.14
+- MLflow 2.8
 
-## Monitoring & Observabilité
+### Serving
 
-### Métriques Business
-- **CTR**: Click-Through Rate
-- **Conversion**: Taux de conversion
-- **Revenue**: Revenue per user
-- **Diversity**: Diversité des recommandations
+- FastAPI
+- Redis
+- Streamlit
 
-### Métriques Techniques
-- **Latence**: API response time
-- **Throughput**: Requests per second
-- **Cache Hit Rate**: Efficacité du cache
-- **Model Accuracy**: RMSE, Precision@K
+### Monitoring
 
-### Infrastructure Monitoring
-- **Spark**: Cluster metrics, job performance
-- **Redis**: Memory usage, hit rate
-- **API**: Response times, error rates
-- **System**: CPU, memory, disk usage
+- Prometheus
+- Grafana
 
-## Sécurité & Compliance
+## Observabilité
 
-### Data Privacy
-- **Anonymisation**: User IDs hashés
-- **Encryption**: TLS pour les APIs
-- **Access Control**: RBAC pour les services
+### Métriques clés
 
-### Model Governance
-- **Versioning**: MLflow model registry
-- **Audit Trail**: Logs structurés
-- **Explainability**: Feature importance tracking
+- CTR
+- Conversion rate
+- Latence API
+- Cache hit rate
+- RMSE, Precision@K
 
-## Déploiement & Scalabilité
+### Surveillance infrastructure
+
+- Durée des jobs Spark
+- Consommation mémoire
+- Charge CPU
+- Erreurs API
+
+## Sécurité
+
+### Confidentialité des données
+
+- Anonymisation des identifiants utilisateur
+- TLS pour les APIs
+- Contrôle d’accès
+
+### Gouvernance des modèles
+
+- Versioning MLflow
+- Historique des entraînements
+- Traçabilité des features
+
+## Déploiement
 
 ### Containerisation
-- **Docker**: Images pour chaque service
-- **Docker Compose**: Orchestration locale
-- **Kubernetes**: Production scaling
 
-### CI/CD Pipeline
-- **Testing**: Unit tests + integration tests
-- **Quality**: Code coverage >80%
-- **Deployment**: Automated deployment
+- Docker
+- Docker Compose
+- Kubernetes (pour la production)
 
-### High Availability
-- **Redundancy**: Multi-instance deployment
-- **Failover**: Automatic failover
-- **Backup**: Regular data backups
+### CI/CD
 
-## Estimation des Ressources
+- Tests unitaires et d’intégration
+- Couverture de code >80%
+- Déploiement automatisé
 
-### Cluster Spark (Production)
-- **Driver**: 4 cores, 16GB RAM
-- **Workers**: 8 cores, 32GB RAM × 3
+### Disponibilité
+
+- Instances multiples
+- Reprise automatique
+- Sauvegarde régulière
+
 - **Storage**: 100GB SSD
 
 ### Serving Infrastructure
+
 - **API Servers**: 2 cores, 4GB RAM × 2
 - **Redis**: 4 cores, 8GB RAM
 - **Load Balancer**: 2 cores, 2GB RAM
 
 ### Total Estimated Cost
+
 - **Compute**: ~$500/month (cloud)
 - **Storage**: ~$100/month
 - **Monitoring**: ~$50/month

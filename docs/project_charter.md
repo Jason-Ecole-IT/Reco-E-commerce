@@ -1,43 +1,56 @@
-# Project Charter
+# Charte du projet
 
-## Information Générale
+## Informations générales
 
-| Nom du projet | Gestionnaire du projet | Date de début | Date de fin |
-| ------------- | ---------------------- | ------------- | ----------- |
-| E-Reco        | Ecole-IT               | 13/04/2026    | 17/04/2026  |
-
-## Overview du Projet
-
-| Projet            | Description                                                                                                    |
-| ----------------- | -------------------------------------------------------------------------------------------------------------- |
-| Problème          | Les clients n'ont pas de recommandations personnalisées                                                        |
-| Objectif          | Développer un système de recommandation pour amélioré l'expérience client                                      |
-| Etat du Business  | N/A                                                                                                            |
-| Objectif / Métric | Meilleur précision des recommandations que le random                                                           |
-| Déliverables      | Un système de recommandation fonctionnel, scalable, une présentation des résultats, la documentation du projet |
-
-## Scope du Projet
-
-| In Scope                                   | En dehors du Scope                        |
-| ------------------------------------------ | ----------------------------------------- |
-| Développement du système de recommandation | Intégration avec un système existant      |
-| Cold Start                                 | Maintenance du système après le lancement |
-| Recommandations personnalisées             | Catalogue de produits                     |
-
-## Milestones du Projet
-
-| Milstone | Date de fin |
+| Élément | Valeur |
 | --- | --- |
-| Documentation | 13/04/ |
-| Pipeline de données | 14/04 |
-| Machine Learning | 15/04 |
-| Déploiement | 16/04 |
-| Présentation | 17/04 |
+| Nom du projet | E-Reco |
+| Responsable | École IT |
+| Date de début | 13/04/2026 |
+| Date de fin prévue | 17/04/2026 |
 
-## Vision Business
+## Objectifs du projet
 
-Le projet E-Reco vise à améliorer l'expérience client en fournissant des recommandations personnalisées. En utilisant des techniques de machine learning, nous espérons augmenter la satisfaction des clients et potentiellement augmenter les ventes.
+- Développer un moteur de recommandation personnalisé pour e-commerce
+- Améliorer l’expérience client
+- Maximiser la pertinence des suggestions produit
+- Construire une solution scalable et documentée
 
-## Concurrence
+## Contexte
 
-Il existe plusieurs systèmes de recommandation sur le marché, tels que ceux utilisés par Amazon, Netflix et Spotify. Cependant, notre projet se différencie en se concentrant sur une approche personnalisée et en utilisant des données spécifiques à notre clientèle.
+Les clients ne disposent pas de recommandations personnalisées adaptées à leurs préférences. Le projet vise à fournir une solution capable de proposer des produits pertinents en temps réel tout en assurant performance et qualité des données.
+
+## Périmètre
+
+| Inclus | Exclu |
+| --- | --- |
+| Développement du moteur de recommandation | Intégration dans un système existant tiers |
+| Cold start et recommandations personnalisées | Maintenance post-déploiement |
+| API de service et dashboard utilisateur | Catalogue produit complet hors périmètre |
+| Documentation et livrables projet | Évolutions après soutenance |
+
+## Jalons
+
+| Jalon | Date de fin |
+| --- | --- |
+| Documentation initiale | 13/04/2026 |
+| Pipeline de données | 14/04/2026 |
+| Modélisation ML | 15/04/2026 |
+| Déploiement | 16/04/2026 |
+| Présentation finale | 17/04/2026 |
+
+## Livrables
+
+- Moteur de recommandation fonctionnel
+- API de recommandations
+- Dashboard utilisateur
+- Documentation technique et métier
+- Présentation finale
+
+## Vision métier
+
+E-Reco vise à améliorer l’expérience d’achat en ligne en proposant des recommandations pertinentes aux utilisateurs. L’objectif est d’augmenter l’engagement, le taux de clics et la conversion tout en garantissant une solution robuste.
+
+## Benchmark
+
+Sur le marché, les grandes plateformes comme Amazon, Netflix et Spotify utilisent des systèmes de recommandation avancés. Notre projet se différencie par une approche pédagogique, hybride et orientée e-commerce avec des métriques claires.

@@ -1,102 +1,81 @@
-# Moteur de Recommandation E-commerce
+# Reco E-commerce
 
-## **Projet M1SPAR - Python Spark et projets IA avancés**
+## Projet M1 SPAR - Moteur de recommandation e-commerce
 
-### 📋 Description
+### Description
 
-Moteur de recommandation e-commerce utilisant PySpark ALS pour le collaborative filtering, TensorFlow embeddings pour le deep learning, et Feast pour le feature store.
+Ce projet développe un moteur de recommandation e-commerce basé sur PySpark ALS, des embeddings TensorFlow et Feast comme feature store. L’objectif est de proposer des recommandations personnalisées, efficaces et adaptées à un environnement e-commerce.
 
-**Objectifs :**
+### Objectifs
 
-- Augmenter CTR de 15% vs recommandations random
-- Recommandations personnalisées <50ms latence  
-- Support 10M utilisateurs, 1M produits
-- A/B testing avec significance statistique
+- Améliorer le taux de clics (CTR) d’au moins 15% par rapport à une recommandation aléatoire
+- Atteindre une latence API cible inférieure à 50ms
+- Supporter un volume important d’utilisateurs et de produits
+- Livrer un prototype documenté et déployable
 
-### 🏗️ Architecture
+### Stack technique
 
-```md
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Data Source   │    │   Processing     │    │   Serving       │
-│                 │    │                  │    │                 │
-│ Amazon Reviews  │───▶│ PySpark ALS      │───▶│ FastAPI         │
-│ Metadata        │    │ TensorFlow       │    │ Redis Cache     │
-└─────────────────┘    │ Feature Store    │    │ Streamlit UI    │
-                       └──────────────────┘    └─────────────────┘
-```
+- Big Data : PySpark 3.4, Delta Lake 2.4
+- ML : PySpark ALS, TensorFlow 2.14, Scikit-learn
+- Feature Store : Feast 0.38
+- Serving : FastAPI, Redis, Streamlit
+- MLOps : MLflow 2.8, Docker
+- Monitoring : Prometheus, Grafana
 
-### 🛠️ Stack Technique
+## Structure du projet
 
-- **BigData**: PySpark 3.4, Delta Lake 2.4
-- **ML**: PySpark ALS, TensorFlow 2.14, Scikit-learn
-- **Feature Store**: Feast 0.38
-- **Serving**: FastAPI, Redis, Streamlit
-- **MLOps**: MLflow 2.8, Docker
-- **Monitoring**: Prometheus, Grafana
+- `api/` : API backend et services de recommandation
+- `app/` : interface utilisateur et dashboard
+- `data/` : données brutes, données nettoyées et rapports
+- `docs/` : documentation du projet
+- `docker/` : conteneurs et orchestration
+- `etl/` : scripts d’ingestion, de nettoyage et d’analyse
+- `features/` : logique de feature engineering
+- `ml/` : modèles et entraînement
+- `notebooks/` : exploration et prototypes
 
-## 📁 Structure du Projet
+## Démarrage rapide
 
-```md
-moteur_recommandation/
-├── data/                   # Données brutes et traitées
-├── notebooks/              # Jupyter notebooks d'exploration
-├── src/                    # Code source
-│   ├── data/              # Pipeline ETL
-│   ├── models/            # Modèles ML
-│   ├── features/          # Feature engineering
-│   ├── serving/           # API et serving
-│   └── utils/             # Utilitaires
-├── tests/                  # Tests unitaires et intégration
-├── configs/               # Configurations
-├── docker/                # Docker files
-└── docs/                  # Documentation
-```
-
-### 🚀 Quick Start
-
-1. Installation des dépendances :
+1. Installer les dépendances :
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Téléchargement des données :
+1. Télécharger les données :
 
 ```bash
-python src/data/download_data.py
+python etl/download_data.py
 ```
 
-3. Lancement du pipeline :
+1. Nettoyer les données :
 
 ```bash
-python src/main.py
+python etl/data_cleaning.py
 ```
 
-## 📊 KPIs et Métriques
+1. Analyser la qualité des données :
 
-**Business KPIs:**
+```bash
+python etl/data_quality_analysis.py
+```
 
-- Click-Through Rate (CTR)
-- Conversion Rate
-- Revenue per User
-- Recommendation Diversity
+1. Consulter la documentation :
 
-**Technical Metrics:**
+- `docs/architecture.md`
+- `docs/architecture_technique.md`
+- `docs/kpis_metrics.md`
+- `docs/project_charter.md`
+- `docs/planning_5jours.md`
+- `docs/management-artifact.md`
 
-- Latence API (<50ms)
-- Throughput (req/s)
-- Model Accuracy (RMSE, Precision@k)
-- Cache Hit Rate
+## Données principales
 
-## 👥 Équipe
+- `data/clean_data/amazon_reviews_clothing_clean.json`
+- `data/clean_data/amazon_reviews_electronics_clean.json`
+- `data/report/quality_report_clothing.json`
+- `data/report/quality_report_electronics.json`
 
-- Taille recommandée : 2-3 étudiants
-- Rôles : Data Engineer, ML Engineer, Full-stack Developer
+## Notes
 
-## 📅 Planning (5 jours)
-
-- **Jour 1**: Setup et exploration données
-- **Jour 2**: Pipeline ETL et feature engineering  
-- **Jour 3**: Modélisation ML et entraînement
-- **Jour 4**: Déploiement et interfaces
-- **Jour 5**: Finalisation et soutenance
+Ce projet est conçu pour être extensible et reproductible : les pipelines ETL sont séparés des modèles ML, et l’architecture permet d’ajouter facilement un service de recommandation temps réel.
