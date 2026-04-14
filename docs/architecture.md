@@ -1,25 +1,38 @@
-# Architecture Diagrams
+# Architecture fonctionnelle
 
-Cette page contient les diagrammes d'architecture du projet. Ces diagrammes développe l'intégralité du process, du moteur de recommandation ainsi que l'interface utilisateur.
+Ce document présente l’architecture fonctionnelle du projet. Pour les détails techniques et la description des composants, consultez `docs/architecture_technique.md`.
 
-## Diagramme process client
+## Vue d’ensemble
 
-````mermaid
-graph LR
+```mermaid
+flowchart LR
+    A[Sources de données] --> B[Ingestion ETL]
+    B --> C[Stockage Delta Lake]
+    C --> D[Feature Store Feast]
+    D --> E[Entraînement et évaluation]
+    E --> F[API FastAPI]
+    F --> G[Cache Redis]
+    G --> H[Application utilisateur]
+```
 
-    subgraph "Cold Start"
-        A[New User]
-        B[Collect User Information]
-        C[Generate Metadata]
-        D[Generate Recommendations]
-        E[Display Recommendations]
-        A --> B --> C --> D --> E
-    end
+## Cas d’usage
 
-    subgraph "Existing User"
-        F[Existing User]
-        G[Generate Recommendations]
-        H[Display Recommendations]
-        F --> G --> H
-    end
-````
+```mermaid
+flowchart TD
+    U[Utilisateur] -->|clic / historique| R[Requête de recommandation]
+    R --> S[API FastAPI]
+    S --> T{Cache Redis}
+    T -->|hit| U
+    T -->|miss| V[Modèle ML]
+    V --> W[Recommandations]
+    W --> U
+```
+
+## Description des flux
+
+- **Ingestion** : collecte et nettoyage des données Amazon Reviews
+- **Stockage** : persistance des tables dans Delta Lake
+- **Feature Store** : publication des features utilisateur/produit avec Feast
+- **Modélisation** : entraînement hybride ALS + embeddings
+- **Serving** : API FastAPI avec cache Redis
+- **Interface** : dashboard Streamlit et interface utilisateur
