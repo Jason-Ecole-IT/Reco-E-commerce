@@ -1,0 +1,210 @@
+{
+  "etl_run_timestamp": "2026-04-14T15:49:09.351786",
+  "pipeline_results": [
+    {
+      "status": "success",
+      "table_name": "electronics_pandas",
+      "csv_path": "data/processed/electronics_pandas_transformed_sample.csv",
+      "json_path": "data/processed/electronics_pandas_transformed_sample.json",
+      "initial_count": 15000,
+      "final_count": 15000,
+      "duration_seconds": 4.682098,
+      "validation_results": {
+        "basic_counts": {
+          "total_records": 15000,
+          "unique_users": 13286,
+          "unique_products": 1129,
+          "null_reviewerID": "0",
+          "null_asin": "0",
+          "null_overall": "0"
+        },
+        "rating_distribution": {
+          "1.0": 676,
+          "2.0": 425,
+          "3.0": 981,
+          "4.0": 2681,
+          "5.0": 10237
+        },
+        "feature_stats": {
+          "avg_word_count": 36.54046666666667,
+          "avg_sentiment": 0.7878,
+          "avg_helpfulness": 0.0,
+          "avg_quality": 1.0561766666666665,
+          "avg_interaction": 0.0
+        },
+        "category_distributions": {
+          "user_experience": {
+            "beginner": 14979,
+            "intermediate": 21
+          },
+          "product_popularity": {
+            "medium": 6780,
+            "high": 5275,
+            "low": 2945
+          },
+          "rating_category": {
+            "positive": 12918,
+            "negative": 1101,
+            "neutral": 981
+          }
+        },
+        "value_ranges": {
+          "overall_range": [
+            1.0,
+            5.0
+          ],
+          "zscore_range": [
+            -3.286665862809685,
+            0.5515518912597822
+          ],
+          "sentiment_range": [
+            -1.0,
+            1.0
+          ],
+          "helpfulness_range": [
+            0.0,
+            0.0
+          ]
+        },
+        "correlations": {
+          "overall": {
+            "overall": 1.0,
+            "word_count": -0.11080345703912885,
+            "sentiment_score": 0.9236736929708911,
+            "helpfulness_ratio": NaN
+          },
+          "word_count": {
+            "overall": -0.11080345703912885,
+            "word_count": 1.0,
+            "sentiment_score": -0.10399005765023508,
+            "helpfulness_ratio": NaN
+          },
+          "sentiment_score": {
+            "overall": 0.9236736929708911,
+            "word_count": -0.10399005765023508,
+            "sentiment_score": 1.0,
+            "helpfulness_ratio": NaN
+          },
+          "helpfulness_ratio": {
+            "overall": NaN,
+            "word_count": NaN,
+            "sentiment_score": NaN,
+            "helpfulness_ratio": NaN
+          }
+        }
+      },
+      "pipeline_stats": {
+        "start_time": "2026-04-14 15:49:03.650659",
+        "end_time": "2026-04-14 15:49:09.330053",
+        "records_processed": 10000,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "status": "success",
+      "table_name": "clothing_pandas",
+      "csv_path": "data/processed/clothing_pandas_transformed_sample.csv",
+      "json_path": "data/processed/clothing_pandas_transformed_sample.json",
+      "initial_count": 10000,
+      "final_count": 10000,
+      "duration_seconds": 5.679394,
+      "validation_results": {
+        "basic_counts": {
+          "total_records": 10000,
+          "unique_users": 8021,
+          "unique_products": 763,
+          "null_reviewerID": "0",
+          "null_asin": "0",
+          "null_overall": "0"
+        },
+        "rating_distribution": {
+          "1.0": 319,
+          "2.0": 464,
+          "3.0": 917,
+          "4.0": 1907,
+          "5.0": 6393
+        },
+        "feature_stats": {
+          "avg_word_count": 34.7381,
+          "avg_sentiment": 0.7517,
+          "avg_helpfulness": 0.0,
+          "avg_quality": 1.069145,
+          "avg_interaction": 0.0
+        },
+        "category_distributions": {
+          "user_experience": {
+            "beginner": 10000
+          },
+          "product_popularity": {
+            "medium": 6583,
+            "low": 2389,
+            "high": 1028
+          },
+          "rating_category": {
+            "positive": 8300,
+            "neutral": 917,
+            "negative": 783
+          }
+        },
+        "value_ranges": {
+          "overall_range": [
+            1.0,
+            5.0
+          ],
+          "zscore_range": [
+            -3.2400227375349107,
+            0.6181806354339332
+          ],
+          "sentiment_range": [
+            -1.0,
+            1.0
+          ],
+          "helpfulness_range": [
+            0.0,
+            0.0
+          ]
+        },
+        "correlations": {
+          "overall": {
+            "overall": 1.0,
+            "word_count": -0.08789327977047667,
+            "sentiment_score": 0.9184851631326567,
+            "helpfulness_ratio": NaN
+          },
+          "word_count": {
+            "overall": -0.08789327977047667,
+            "word_count": 1.0,
+            "sentiment_score": -0.07826913489585771,
+            "helpfulness_ratio": NaN
+          },
+          "sentiment_score": {
+            "overall": 0.9184851631326567,
+            "word_count": -0.07826913489585771,
+            "sentiment_score": 1.0,
+            "helpfulness_ratio": NaN
+          },
+          "helpfulness_ratio": {
+            "overall": NaN,
+            "word_count": NaN,
+            "sentiment_score": NaN,
+            "helpfulness_ratio": NaN
+          }
+        }
+      },
+      "pipeline_stats": {
+        "start_time": "2026-04-14 15:49:03.650659",
+        "end_time": "2026-04-14 15:49:09.330053",
+        "records_processed": 10000,
+        "errors": [],
+        "warnings": []
+      }
+    }
+  ],
+  "summary": {
+    "total_tables_processed": 2,
+    "total_records_processed": 25000,
+    "total_errors": 0,
+    "total_warnings": 0
+  }
+}
