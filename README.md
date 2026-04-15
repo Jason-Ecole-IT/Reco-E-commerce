@@ -79,3 +79,5 @@ python etl/data_quality_analysis.py
 ## Notes
 
 Ce projet est conçu pour être extensible et reproductible : les pipelines ETL sont séparés des modèles ML, et l’architecture permet d’ajouter facilement un service de recommandation temps réel.
+
+lien vers le dataset: <https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/>
