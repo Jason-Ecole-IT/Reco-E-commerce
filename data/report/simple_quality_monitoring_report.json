@@ -1,0 +1,354 @@
+{
+  "monitoring_timestamp": "2026-04-14T16:36:01.798241",
+  "duration_seconds": 0.192946,
+  "datasets_analyzed": 2,
+  "results": [
+    {
+      "dataset_name": "Electronics",
+      "timestamp": "2026-04-14T16:36:01.676727",
+      "basic_stats": {
+        "total_records": 10000,
+        "total_columns": 81,
+        "memory_usage_mb": 7.8273725509643555
+      },
+      "data_quality": {
+        "null_counts": {
+          "reviewerID": 0,
+          "asin": 0,
+          "overall": 0,
+          "unixReviewTime": 0,
+          "reviewTime": 0,
+          "review_length": 0,
+          "review_word_count": 0,
+          "helpful_votes": 0,
+          "total_votes": 0,
+          "helpful_ratio": 0,
+          "review_date": 0,
+          "review_year": 0,
+          "review_month": 0,
+          "review_dayofweek": 0,
+          "word_count": 0,
+          "char_count": 0,
+          "avg_word_length": 0,
+          "sentiment_score": 0,
+          "rating_zscore": 0,
+          "days_since_epoch": 0,
+          "user_review_count": 0,
+          "user_avg_rating_x": 0,
+          "user_rating_std_x": 7931,
+          "product_review_count": 0,
+          "product_avg_rating_x": 0,
+          "product_rating_std_x": 123,
+          "product_popularity": 0,
+          "helpfulness_ratio": 0,
+          "review_quality": 0,
+          "interaction_strength": 0,
+          "review_day": 0,
+          "review_weekday": 0,
+          "review_hour": 0,
+          "review_dayofyear": 0,
+          "is_weekend": 0,
+          "is_holiday": 0,
+          "month_sin": 0,
+          "month_cos": 0,
+          "weekday_sin": 0,
+          "weekday_cos": 0,
+          "days_since_last_review": 0,
+          "weeks_since_last_review": 0,
+          "user_activity_days": 0,
+          "user_review_frequency": 0,
+          "product_lifetime_days": 0,
+          "user_popularity": 0,
+          "user_product_diversity": 0,
+          "user_avg_rating_y": 0,
+          "user_rating_std_y": 8504,
+          "product_user_diversity": 0,
+          "product_avg_rating_y": 0,
+          "product_rating_std_y": 245,
+          "rating_confidence": 0,
+          "engagement_intensity": 0,
+          "user_rarity_score": 0,
+          "product_rarity_score": 0,
+          "popularity_match": 0,
+          "diversity_match": 0,
+          "text_complexity": 0,
+          "sentiment_intensity": 0,
+          "review_completeness": 0,
+          "rating_length_interaction": 0,
+          "sentiment_length_correlation": 0,
+          "content_freshness": 0,
+          "rating_sentiment_consistency": 0,
+          "user_rolling_avg_rating": 0,
+          "user_rolling_std_rating": 9189,
+          "user_rolling_avg_length": 0,
+          "user_rolling_sentiment_trend": 0,
+          "product_rolling_avg_rating": 0,
+          "product_rolling_rating_trend": 0,
+          "product_rolling_popularity_trend": 0,
+          "rating_vs_global": 0,
+          "length_vs_global": 0,
+          "sentiment_vs_global": 0,
+          "rating_percentile": 0,
+          "length_percentile": 0,
+          "helpfulness_percentile": 0,
+          "feature_version": 0,
+          "created_timestamp": 0,
+          "feature_count": 0
+        },
+        "numeric_features_count": 78,
+        "overall_stats": {
+          "mean": 4.4237,
+          "median": 5.0,
+          "std": 1.0419629929550611,
+          "min": 1.0,
+          "max": 5.0
+        },
+        "word_count_stats": {
+          "mean": 36.4711,
+          "median": 33.0,
+          "std": 15.483828327773736,
+          "min": "2",
+          "max": "105"
+        },
+        "sentiment_score_stats": {
+          "mean": 0.7872,
+          "median": 1.0,
+          "std": 0.5619143482537862,
+          "min": -1.0,
+          "max": 1.0
+        },
+        "helpfulness_ratio_stats": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "distributions": {
+        "rating_distribution": {
+          "1.0": 446,
+          "2.0": 295,
+          "3.0": 646,
+          "4.0": 1802,
+          "5.0": 6811
+        },
+        "positive_ratio": 0.8613,
+        "user_stats": {
+          "unique_users": 9189,
+          "avg_reviews_per_user": 1.0882576994232234,
+          "single_review_users": "8504"
+        },
+        "product_stats": {
+          "unique_products": 1042,
+          "avg_reviews_per_product": 9.596928982725528
+        }
+      },
+      "alerts": [
+        {
+          "type": "HIGH_NULLS",
+          "severity": "MEDIUM",
+          "message": "Colonnes avec >10% de valeurs nulles: ['user_rating_std_x', 'user_rating_std_y', 'user_rolling_std_rating']"
+        },
+        {
+          "type": "COLD_START",
+          "severity": "HIGH",
+          "message": "Probl\u00e8me de cold start: 92.5% utilisateurs avec 1 review"
+        }
+      ],
+      "overall_quality_score": 0.925
+    },
+    {
+      "dataset_name": "Clothing",
+      "timestamp": "2026-04-14T16:36:01.779811",
+      "basic_stats": {
+        "total_records": 10000,
+        "total_columns": 81,
+        "memory_usage_mb": 7.827417373657227
+      },
+      "data_quality": {
+        "null_counts": {
+          "reviewerID": 0,
+          "asin": 0,
+          "overall": 0,
+          "unixReviewTime": 0,
+          "reviewTime": 0,
+          "review_length": 0,
+          "review_word_count": 0,
+          "helpful_votes": 0,
+          "total_votes": 0,
+          "helpful_ratio": 0,
+          "review_date": 0,
+          "review_year": 0,
+          "review_month": 0,
+          "review_dayofweek": 0,
+          "word_count": 0,
+          "char_count": 0,
+          "avg_word_length": 0,
+          "sentiment_score": 0,
+          "rating_zscore": 0,
+          "days_since_epoch": 0,
+          "user_review_count": 0,
+          "user_avg_rating_x": 0,
+          "user_rating_std_x": 6422,
+          "product_review_count": 0,
+          "product_avg_rating_x": 0,
+          "product_rating_std_x": 17,
+          "product_popularity": 0,
+          "helpfulness_ratio": 0,
+          "review_quality": 0,
+          "interaction_strength": 0,
+          "review_day": 0,
+          "review_weekday": 0,
+          "review_hour": 0,
+          "review_dayofyear": 0,
+          "is_weekend": 0,
+          "is_holiday": 0,
+          "month_sin": 0,
+          "month_cos": 0,
+          "weekday_sin": 0,
+          "weekday_cos": 0,
+          "days_since_last_review": 0,
+          "weeks_since_last_review": 0,
+          "user_activity_days": 0,
+          "user_review_frequency": 0,
+          "product_lifetime_days": 0,
+          "user_popularity": 0,
+          "user_product_diversity": 0,
+          "user_avg_rating_y": 0,
+          "user_rating_std_y": 6422,
+          "product_user_diversity": 0,
+          "product_avg_rating_y": 0,
+          "product_rating_std_y": 17,
+          "rating_confidence": 0,
+          "engagement_intensity": 0,
+          "user_rarity_score": 0,
+          "product_rarity_score": 0,
+          "popularity_match": 0,
+          "diversity_match": 0,
+          "text_complexity": 0,
+          "sentiment_intensity": 0,
+          "review_completeness": 0,
+          "rating_length_interaction": 0,
+          "sentiment_length_correlation": 0,
+          "content_freshness": 0,
+          "rating_sentiment_consistency": 0,
+          "user_rolling_avg_rating": 0,
+          "user_rolling_std_rating": 8021,
+          "user_rolling_avg_length": 0,
+          "user_rolling_sentiment_trend": 0,
+          "product_rolling_avg_rating": 0,
+          "product_rolling_rating_trend": 0,
+          "product_rolling_popularity_trend": 0,
+          "rating_vs_global": 0,
+          "length_vs_global": 0,
+          "sentiment_vs_global": 0,
+          "rating_percentile": 0,
+          "length_percentile": 0,
+          "helpfulness_percentile": 0,
+          "feature_version": 0,
+          "created_timestamp": 0,
+          "feature_count": 0
+        },
+        "numeric_features_count": 78,
+        "overall_stats": {
+          "mean": 4.3591,
+          "median": 5.0,
+          "std": 1.0367519835850554,
+          "min": 1.0,
+          "max": 5.0
+        },
+        "word_count_stats": {
+          "mean": 34.7381,
+          "median": 31.0,
+          "std": 13.683363323144764,
+          "min": "2",
+          "max": "107"
+        },
+        "sentiment_score_stats": {
+          "mean": 0.7517,
+          "median": 1.0,
+          "std": 0.5859022428219697,
+          "min": -1.0,
+          "max": 1.0
+        },
+        "helpfulness_ratio_stats": {
+          "mean": 0.0,
+          "median": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "distributions": {
+        "rating_distribution": {
+          "1.0": 319,
+          "2.0": 464,
+          "3.0": 917,
+          "4.0": 1907,
+          "5.0": 6393
+        },
+        "positive_ratio": 0.83,
+        "user_stats": {
+          "unique_users": 8021,
+          "avg_reviews_per_user": 1.2467273407305821,
+          "single_review_users": "6422"
+        },
+        "product_stats": {
+          "unique_products": 763,
+          "avg_reviews_per_product": 13.106159895150721
+        }
+      },
+      "alerts": [
+        {
+          "type": "HIGH_NULLS",
+          "severity": "MEDIUM",
+          "message": "Colonnes avec >10% de valeurs nulles: ['user_rating_std_x', 'user_rating_std_y', 'user_rolling_std_rating']"
+        },
+        {
+          "type": "COLD_START",
+          "severity": "HIGH",
+          "message": "Probl\u00e8me de cold start: 80.1% utilisateurs avec 1 review"
+        }
+      ],
+      "overall_quality_score": 0.925
+    }
+  ],
+  "summary": {
+    "total_datasets": 2,
+    "avg_quality_score": 0.925,
+    "total_alerts": 4,
+    "high_severity_alerts": 2,
+    "datasets_with_issues": 0
+  },
+  "monitoring_stats": {
+    "start_time": "2026-04-14 16:36:01.605254",
+    "end_time": "2026-04-14 16:36:01.798200",
+    "datasets_monitored": [
+      "Electronics",
+      "Clothing"
+    ],
+    "alerts_generated": [
+      {
+        "type": "HIGH_NULLS",
+        "severity": "MEDIUM",
+        "message": "Colonnes avec >10% de valeurs nulles: ['user_rating_std_x', 'user_rating_std_y', 'user_rolling_std_rating']"
+      },
+      {
+        "type": "COLD_START",
+        "severity": "HIGH",
+        "message": "Probl\u00e8me de cold start: 92.5% utilisateurs avec 1 review"
+      },
+      {
+        "type": "HIGH_NULLS",
+        "severity": "MEDIUM",
+        "message": "Colonnes avec >10% de valeurs nulles: ['user_rating_std_x', 'user_rating_std_y', 'user_rolling_std_rating']"
+      },
+      {
+        "type": "COLD_START",
+        "severity": "HIGH",
+        "message": "Probl\u00e8me de cold start: 80.1% utilisateurs avec 1 review"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "monitoring_timestamp": "2026-04-14T16:32:37.491583",
+  "monitoring_results": [
+    {
+      "status": "error",
+      "error": "\"['review_timestamp'] not in index\"",
+      "quality_stats": {
+        "start_time": "2026-04-14 16:32:37.247316",
+        "end_time": "2026-04-14 16:32:37.490621",
+        "validations_run": [],
+        "anomalies_detected": [],
+        "alerts_triggered": [],
+        "errors": [
+          "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\""
+        ]
+      }
+    },
+    {
+      "status": "error",
+      "error": "\"['review_timestamp'] not in index\"",
+      "quality_stats": {
+        "start_time": "2026-04-14 16:32:37.247316",
+        "end_time": "2026-04-14 16:32:37.490621",
+        "validations_run": [],
+        "anomalies_detected": [],
+        "alerts_triggered": [],
+        "errors": [
+          "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+          "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\""
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "total_datasets_monitored": 2,
+    "total_records_monitored": 0,
+    "avg_quality_score": 0.0,
+    "avg_drift_score": 0.0,
+    "total_alerts": 0,
+    "datasets_with_issues": 2
+  },
+  "quality_stats": {
+    "start_time": "2026-04-14 16:32:37.247316",
+    "end_time": "2026-04-14 16:32:37.490621",
+    "validations_run": [],
+    "anomalies_detected": [],
+    "alerts_triggered": [],
+    "errors": [
+      "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+      "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\"",
+      "Erreur validation qualit\u00e9: \"['review_timestamp'] not in index\"",
+      "Erreur monitoring qualit\u00e9: \"['review_timestamp'] not in index\""
+    ]
+  }
+}
