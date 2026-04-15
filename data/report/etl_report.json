@@ -1,0 +1,39 @@
+{
+  "etl_run_timestamp": "2026-04-14T15:44:59.305130",
+  "pipeline_results": [
+    {
+      "status": "error",
+      "error": "[CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110",
+      "pipeline_stats": {
+        "start_time": "2026-04-14 15:44:57.592757",
+        "end_time": "2026-04-14 15:44:58.982434",
+        "records_processed": 0,
+        "errors": [
+          "Erreur pipeline ETL: [CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110",
+          "Erreur pipeline ETL: [CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110"
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "status": "error",
+      "error": "[CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110",
+      "pipeline_stats": {
+        "start_time": "2026-04-14 15:44:57.592757",
+        "end_time": "2026-04-14 15:44:58.982434",
+        "records_processed": 0,
+        "errors": [
+          "Erreur pipeline ETL: [CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110",
+          "Erreur pipeline ETL: [CANNOT_MODIFY_STATIC_CONFIG] Cannot modify the value of the static Spark config: \"spark.sql.extensions\". SQLSTATE: 46110"
+        ],
+        "warnings": []
+      }
+    }
+  ],
+  "summary": {
+    "total_tables_processed": 2,
+    "total_records_processed": 0,
+    "total_errors": 4,
+    "total_warnings": 0
+  }
+}

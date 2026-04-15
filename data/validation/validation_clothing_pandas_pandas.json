@@ -1,0 +1,83 @@
+{
+  "basic_counts": {
+    "total_records": 10000,
+    "unique_users": 8021,
+    "unique_products": 763,
+    "null_reviewerID": "0",
+    "null_asin": "0",
+    "null_overall": "0"
+  },
+  "rating_distribution": {
+    "1.0": 319,
+    "2.0": 464,
+    "3.0": 917,
+    "4.0": 1907,
+    "5.0": 6393
+  },
+  "feature_stats": {
+    "avg_word_count": 34.7381,
+    "avg_sentiment": 0.7517,
+    "avg_helpfulness": 0.0,
+    "avg_quality": 1.069145,
+    "avg_interaction": 0.0
+  },
+  "category_distributions": {
+    "user_experience": {
+      "beginner": 10000
+    },
+    "product_popularity": {
+      "medium": 6583,
+      "low": 2389,
+      "high": 1028
+    },
+    "rating_category": {
+      "positive": 8300,
+      "neutral": 917,
+      "negative": 783
+    }
+  },
+  "value_ranges": {
+    "overall_range": [
+      1.0,
+      5.0
+    ],
+    "zscore_range": [
+      -3.2400227375349107,
+      0.6181806354339332
+    ],
+    "sentiment_range": [
+      -1.0,
+      1.0
+    ],
+    "helpfulness_range": [
+      0.0,
+      0.0
+    ]
+  },
+  "correlations": {
+    "overall": {
+      "overall": 1.0,
+      "word_count": -0.08789327977047667,
+      "sentiment_score": 0.9184851631326567,
+      "helpfulness_ratio": NaN
+    },
+    "word_count": {
+      "overall": -0.08789327977047667,
+      "word_count": 1.0,
+      "sentiment_score": -0.07826913489585771,
+      "helpfulness_ratio": NaN
+    },
+    "sentiment_score": {
+      "overall": 0.9184851631326567,
+      "word_count": -0.07826913489585771,
+      "sentiment_score": 1.0,
+      "helpfulness_ratio": NaN
+    },
+    "helpfulness_ratio": {
+      "overall": NaN,
+      "word_count": NaN,
+      "sentiment_score": NaN,
+      "helpfulness_ratio": NaN
+    }
+  }
+}
