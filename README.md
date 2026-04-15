@@ -76,8 +76,12 @@ python etl/data_quality_analysis.py
 - `data/report/quality_report_clothing.json`
 - `data/report/quality_report_electronics.json`
 
+## Dataset
+
+Le projet utilise des datasets basée sur les review Amazon, accessibles via ce lien: [Amazon Reviews](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/), nous avons sélectionné le dataset 5-core, qui est un sous-ensemble filtrés pour ne conserver que les utilisateurs et produits avec au moins 5 interactions, afin de garantir une qualité suffisant pour l'entrainement de notre moteur de recommandation.
+
+Sur ce dataset nous avons utilisé un autre sous-ensemble, qui contient uniquement les catégories "Clothing" et "Electronics" à des fin de test et de démonstration.
+
 ## Notes
 
 Ce projet est conçu pour être extensible et reproductible : les pipelines ETL sont séparés des modèles ML, et l’architecture permet d’ajouter facilement un service de recommandation temps réel.
-
-lien vers le dataset: <https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/>
