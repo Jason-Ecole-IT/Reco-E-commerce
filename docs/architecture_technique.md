@@ -24,7 +24,7 @@ flowchart LR
 
 - **Sources** : Amazon Reviews (Electronics et Clothing)
 - **Format** : JSON / JSON Lines
-- **Stockage** : Delta Lake pour ACID et réécriture
+- **Stockage** : Données stockées sous formas Parquet
 - **Validation** : règles de qualité et contrôle des duplications
 
 ### 2. Traitement
@@ -33,11 +33,10 @@ flowchart LR
 - **ETL** : ingestion, nettoyage, enrichissement, agrégation
 - **Feature Store** : Feast 0.38
 - **Cache** : Redis pour les résultats de recommandations
-- **Monitoring** : Prometheus et Grafana
 
 ### 3. Modélisation
 
-- **Collaborative Filtering** : PySpark ALS
+- **Collaborative Filtering** : sikit-learn ALS
 - **Embeddings** : TensorFlow 2.14
 - **Approche hybride** : ALS + contenu pour gérer le cold start
 - **Évaluation** : RMSE, Precision@K, NDCG
@@ -68,6 +67,13 @@ flowchart LR
 2. Entraînement des modèles
 3. Évaluation et comparaison
 4. Enregistrement dans MLflow
+
+### Modèle ALS
+
+1. Entraînement sur les intéractions utilisateur-produit
+2. Génération de recommandations
+3. Mise à jour du cache Redis
+4. Réponse aux requêtes API
 
 ### Pipeline de serving
 
@@ -108,7 +114,7 @@ flowchart LR
 
 ### Machine Learning
 
-- PySpark ALS
+- sikit-learn 1.3
 - TensorFlow 2.14
 - MLflow 2.8
 
@@ -182,8 +188,19 @@ flowchart LR
 - **Redis**: 4 cores, 8GB RAM
 - **Load Balancer**: 2 cores, 2GB RAM
 
-### Total Estimated Cost
+### Testing
 
-- **Compute**: ~$500/month (cloud)
-- **Storage**: ~$100/month
-- **Monitoring**: ~$50/month
+Model evaluation:
+
+- **Cross-validation**
+- **Performance benchmarking**
+- **Overfitting analysis**
+- **Inference time**
+- **Data consistencey checks**
+
+API evaluation:
+
+- **API endpoint**
+- **Cache functionality**
+- **Error handling**
+- **Performance testing**
