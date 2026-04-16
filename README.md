@@ -75,7 +75,8 @@ uvicorn serving.recommendation_api:app --host 0.0.0.0 --port 8000 --reload
 7. Lancer le dashboard:
 
 ```bash
-streamlit run app/dashboard.py```
+streamlit run app/dashboard.py
+```
 
 8. Consulter la documentation :
 

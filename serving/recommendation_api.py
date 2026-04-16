@@ -13,9 +13,7 @@ import joblib
 import json
 import logging
 from datetime import datetime
-import redis
-import os
-from functools import lru_cache
+import time
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
@@ -118,29 +116,22 @@ async def startup_event():
     logger.info("Chargement des modèles au démarrage")
     
     # Charger le modèle de recommandation
-    model_path = "data/output"
-    model_loader.load_model(model_path, "collaborative_filtering_model")
+    model_path = os.path.join(os.path.dirname(__file__), "..", "data", "output")
+    model_path = os.path.abspath(model_path)
+    logger.info(f"Chemin du modèle: {model_path}")
     
-    # Charger les feature stores
-    model_loader.load_feature_store("data/clean_data/features/clothing_features_feature_store.csv", "clothing")
-    model_loader.load_feature_store("data/clean_data/features/electronics_features_feature_store.csv", "electronics")
-    model_loader.load_feature_store(
-        "data/processed/electronics_features_feature_store.csv",
-        "electronics"
-    )
-    model_loader.load_feature_store(
-        "data/processed/clothing_features_feature_store.csv",
-        "clothing"
-    )
+    model = model_loader.load_model(model_path, "collaborative_filtering_model")
+    if model:
+        logger.info("Modèle chargé avec succès")
+    else:
+        logger.error("Échec du chargement du modèle")
     
-    # Charger les modèles s'ils existent
-    model_loader.load_model("models/ml_electronics", "logistic_regression")
-    model_loader.load_model("models/ml_electronics", "random_forest")
-    model_loader.load_model("models/ml_electronics", "gradient_boosting")
+    # Charger les feature stores (seulement ceux qui existent)
+    feature_base = os.path.join(os.path.dirname(__file__), "..", "data", "clean_data", "features")
+    feature_base = os.path.abspath(feature_base)
     
-    model_loader.load_model("models/ml_clothing", "logistic_regression")
-    model_loader.load_model("models/ml_clothing", "random_forest")
-    model_loader.load_model("models/ml_clothing", "gradient_boosting")
+    model_loader.load_feature_store(os.path.join(feature_base, "clothing_features_feature_store.csv"), "clothing")
+    model_loader.load_feature_store(os.path.join(feature_base, "electronics_features_feature_store.csv"), "electronics")
     
     logger.info("Démarrage de l'API terminé")
 
@@ -168,13 +159,18 @@ def cache_set(key: str, value: dict, ttl: int = 3600):
 def generate_recommendations(user_id: str, top_n: int, model_data: dict) -> list:
     """Générer des recommandations pour un utilisateur"""
     try:
+        logger.info(f"Génération recommandations pour user {user_id}, top_n={top_n}")
+        
         user_factors = model_data['user_factors']
         item_factors = model_data['item_factors']
         user_ids = model_data['user_ids']
         item_ids = model_data['item_ids']
-        item_similarity = model_data['item_similarity']
+        
+        logger.info(f"User factors shape: {user_factors.shape}, Item factors shape: {item_factors.shape}")
+        logger.info(f"Nombre d'utilisateurs: {len(user_ids)}, Nombre d'items: {len(item_ids)}")
         
         if user_id not in user_ids:
+            logger.info(f"Utilisateur {user_id} non trouvé, utilisation cold start")
             # Cold start: retourner les produits les plus populaires
             popular_items = (
                 model_data['user_item_matrix']
@@ -195,27 +191,32 @@ def generate_recommendations(user_id: str, top_n: int, model_data: dict) -> list
         user_idx = user_ids.index(user_id)
         user_vector = user_factors[user_idx]
         
-        # Calculer les scores de similarité
-        scores = {}
-        for item_idx, item_id in enumerate(item_ids):
-            item_vector = item_factors[item_idx]
-            score = np.dot(user_vector, item_vector)
-            scores[item_id] = score
+        logger.info(f"Utilisateur trouvé à l'index {user_idx}")
         
-        # Trier et retourner les top N
-        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        # Calcul vectoriel optimisé : calculer tous les scores en une fois
+        # user_factors[user_idx] @ item_factors.T donne les scores pour tous les items
+        scores = np.dot(user_vector, item_factors.T)
+        
+        logger.info(f"Scores calculés, shape: {scores.shape}")
+        
+        # Obtenir les indices des top N scores
+        top_indices = np.argsort(scores)[::-1][:top_n]
+        
+        logger.info(f"Top {top_n} indices: {top_indices}")
         
         return [
             {
-                "product_id": product_id,
-                "score": float(score),
+                "product_id": item_ids[idx],
+                "score": float(scores[idx]),
                 "reason": "collaborative_filtering"
             }
-            for product_id, score in sorted_scores[:top_n]
+            for idx in top_indices
         ]
         
     except Exception as e:
         logger.error(f"Erreur génération recommandations: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         return []
 
 # Endpoints de l'API
@@ -252,13 +253,18 @@ async def get_recommendations(request: RecommendationRequest):
             logger.info(f"Cache hit pour {cache_key}")
             return cached_result
         
+        logger.info("Cache miss, génération des recommandations")
+        
         # Récupérer le modèle
         model = model_loader.get_model("collaborative_filtering_model")
         if not model:
             raise HTTPException(status_code=500, detail="Model not loaded")
         
-        # Générer les recommandations
-        recommendations = generate_recommendations(
+        # Générer les recommandations de manière asynchrone
+        import asyncio
+        recommendations = await asyncio.get_event_loop().run_in_executor(
+            None, 
+            generate_recommendations,
             request.user_id, 
             request.num_recommendations, 
             model
@@ -275,6 +281,8 @@ async def get_recommendations(request: RecommendationRequest):
         cache_set(cache_key, result)
         
         logger.info(f"Recommandations générées pour {request.user_id}")
+        
+        return result
         return result
         
         result = {

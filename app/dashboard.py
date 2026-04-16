@@ -22,9 +22,9 @@ def call_api(endpoint, data=None):
         url = f"{base_url}{endpoint}"
 
         if data:
-            response = requests.post(url, json=data, timeout=10)
+            response = requests.post(url, json=data, timeout=30)  # Augmenté à 30 secondes
         else:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=30)
 
         if response.status_code == 200:
             return response.json()
