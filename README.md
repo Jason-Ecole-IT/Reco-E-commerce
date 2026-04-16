@@ -42,25 +42,42 @@ Ce projet développe un moteur de recommandation e-commerce basé sur PySpark AL
 pip install -r requirements.txt
 ```
 
-1. Télécharger les données :
+2. Télécharger les données :
 
 ```bash
 python etl/download_data.py
 ```
 
-1. Nettoyer les données :
+3. Nettoyer les données :
 
 ```bash
 python etl/data_cleaning.py
 ```
 
-1. Analyser la qualité des données :
+4. Analyser la qualité des données :
 
 ```bash
 python etl/data_quality_analysis.py
 ```
 
-1. Consulter la documentation :
+5. Régénérer le modèle:
+
+```bash
+python ml/train_recommender_sklearn.py
+```
+
+6. Lancer l'API:
+
+```bash
+uvicorn serving.recommendation_api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+7. Lancer le dashboard:
+
+```bash
+streamlit run app/dashboard.py```
+
+8. Consulter la documentation :
 
 - `docs/architecture.md`
 - `docs/architecture_technique.md`
