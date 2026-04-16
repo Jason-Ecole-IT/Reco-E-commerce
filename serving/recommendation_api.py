@@ -14,6 +14,8 @@ import json
 import logging
 from datetime import datetime
 import time
+import os
+import redis
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
@@ -180,7 +182,7 @@ def generate_recommendations(user_id: str, top_n: int, model_data: dict) -> list
             )
             return [
                 {
-                    "product_id": item_ids[idx],
+                    "product_id": str(item_ids[idx]),
                     "score": float(score),
                     "reason": "popular_fallback"
                 }
@@ -206,7 +208,7 @@ def generate_recommendations(user_id: str, top_n: int, model_data: dict) -> list
         
         return [
             {
-                "product_id": item_ids[idx],
+                "product_id": str(item_ids[idx]),
                 "score": float(scores[idx]),
                 "reason": "collaborative_filtering"
             }
