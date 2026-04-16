@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import requests
 import json
+import random
+import altair as alt
 from datetime import datetime
 
 # Configuration
@@ -13,7 +15,7 @@ st.markdown("Système de recommandation personnalisé pour e-commerce")
 
 # Sidebar
 st.sidebar.header("Navigation")
-page = st.sidebar.radio("Choisir une page", ["Accueil", "Recommandations", "Métriques", "À propos"])
+page = st.sidebar.radio("Choisir une page", ["Accueil", "Recommandations", "Métriques", "A/B Testing", "À propos"])
 
 # Fonction pour appeler l'API
 def call_api(endpoint, data=None):
@@ -34,6 +36,62 @@ def call_api(endpoint, data=None):
     except Exception as e:
         st.error(f"Erreur de connexion: {e}")
         return None
+
+
+def load_feature_store(category: str):
+    path = f"data/clean_data/features/{category}_features_feature_store.csv"
+    return pd.read_csv(path)
+
+
+def plot_top_reviewed(df: pd.DataFrame, top_n: int = 10):
+    product_reviews = df.groupby('asin').agg(review_count=('reviewerID', 'count')).reset_index()
+    top_reviewed = product_reviews.sort_values('review_count', ascending=False).head(top_n)
+    chart = alt.Chart(top_reviewed).mark_bar().encode(
+        x=alt.X('review_count:Q', title='Nombre de reviews'),
+        y=alt.Y('asin:N', sort='-x', title='Produit'),
+        tooltip=['asin', 'review_count']
+    ).properties(height=400)
+    return chart
+
+
+def plot_best_rated(df: pd.DataFrame, top_n: int = 10, min_reviews: int = 20):
+    product_ratings = df.groupby('asin').agg(
+        avg_rating=('overall', 'mean'),
+        review_count=('reviewerID', 'count')
+    ).reset_index()
+    product_ratings = product_ratings[product_ratings['review_count'] >= min_reviews]
+    top_rated = product_ratings.sort_values(['avg_rating', 'review_count'], ascending=[False, False]).head(top_n)
+    chart = alt.Chart(top_rated).mark_bar().encode(
+        x=alt.X('avg_rating:Q', title='Note moyenne'),
+        y=alt.Y('asin:N', sort='-x', title='Produit'),
+        color=alt.Color('review_count:Q', title='Nombre de reviews', scale=alt.Scale(scheme='tealblue')),
+        tooltip=['asin', alt.Tooltip('avg_rating', format='.2f'), 'review_count']
+    ).properties(height=400)
+    return chart
+
+
+def get_popularity_recommendations(df: pd.DataFrame, top_n: int = 10):
+    stats = df.groupby('asin').agg(
+        review_count=('reviewerID', 'count'),
+        avg_rating=('overall', 'mean')
+    ).reset_index()
+    return stats.sort_values(['review_count', 'avg_rating'], ascending=[False, False]).head(top_n)
+
+
+def get_ab_state():
+    if 'ab_test' not in st.session_state:
+        st.session_state.ab_test = {
+            'A': {'views': 0, 'clicks': 0},
+            'B': {'views': 0, 'clicks': 0}
+        }
+    return st.session_state.ab_test
+
+
+def record_ab_event(variant: str, event_type: str):
+    ab_state = get_ab_state()
+    if variant in ab_state and event_type in ab_state[variant]:
+        ab_state[variant][event_type] += 1
+
 
 if page == "Accueil":
     st.header("Bienvenue")
@@ -98,20 +156,137 @@ elif page == "Recommandations":
 elif page == "Métriques":
     st.header("Métriques du système")
 
-    # Charger les recommandations depuis le fichier
-    try:
-        df = pd.read_csv("data/output/recommendations_sklearn.csv")
-        st.subheader("Aperçu des recommandations")
-        st.dataframe(df.head(20))
+    categories = ["clothing", "electronics"]
+    selected_category = st.selectbox("Choisir une catégorie", categories)
 
-        col1, col2 = st.columns(2)
+    try:
+        df_store = load_feature_store(selected_category)
+
+        st.subheader(f"Analyse produit - {selected_category.capitalize()}")
+
+        col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Utilisateurs avec recommandations", df['user_id'].nunique())
+            st.metric("Total avis", len(df_store))
         with col2:
-            st.metric("Total recommandations", len(df))
+            st.metric("Produits uniques", df_store['asin'].nunique())
+        with col3:
+            st.metric("Note moyenne", f"{df_store['overall'].mean():.2f}")
+
+        st.markdown("---")
+
+        review_stats = df_store.groupby('asin').agg(
+            review_count=('reviewerID', 'count'),
+            avg_rating=('overall', 'mean')
+        ).reset_index()
+
+        top_reviewed = review_stats.sort_values('review_count', ascending=False).head(10)
+        top_rated = review_stats[review_stats['review_count'] >= 20].sort_values(['avg_rating', 'review_count'], ascending=[False, False]).head(10)
+
+        st.subheader("Produits les plus commentés")
+        st.altair_chart(
+            alt.Chart(top_reviewed).mark_bar().encode(
+                x=alt.X('review_count:Q', title='Nombre de reviews'),
+                y=alt.Y('asin:N', sort='-x', title='Produit'),
+                tooltip=['asin', 'review_count']
+            ).properties(height=420),
+            use_container_width=True
+        )
+
+        st.subheader("Produits les mieux notés")
+        st.altair_chart(
+            alt.Chart(top_rated).mark_bar().encode(
+                x=alt.X('avg_rating:Q', title='Note moyenne'),
+                y=alt.Y('asin:N', sort='-x', title='Produit'),
+                color=alt.Color('review_count:Q', title='Nombre de reviews', scale=alt.Scale(scheme='teals')),
+                tooltip=['asin', alt.Tooltip('avg_rating', format='.2f'), 'review_count']
+            ).properties(height=420),
+            use_container_width=True
+        )
+
+        st.markdown("---")
+        st.subheader("Détail top produits")
+        st.dataframe(top_reviewed.rename(columns={
+            'asin': 'Produit',
+            'review_count': 'Nombre de reviews'
+        }))
 
     except FileNotFoundError:
-        st.warning("Fichier de recommandations non trouvé")
+        st.warning("Fichier de feature store introuvable pour la catégorie sélectionnée")
+    except Exception as e:
+        st.error(f"Erreur lors du chargement des métriques: {e}")
+
+elif page == "A/B Testing":
+    st.header("A/B Testing des recommandations")
+
+    exp_name = st.text_input("Nom de l'expérience", "Experiment 1")
+    category = st.selectbox("Catégorie", ["clothing", "electronics"], key="ab_category")
+    user_id = st.text_input("ID Utilisateur pour test", "A0148968UM59JS3Y8D1M", key="ab_user")
+    top_n = st.slider("Taille de la proposition", 1, 10, 5, key="ab_top_n")
+    variant_mode = st.radio("Mode A/B", ["Comparaison side-by-side", "Affectation aléatoire"], index=0)
+
+    try:
+        df_store = load_feature_store(category)
+        popularity_recs = get_popularity_recommendations(df_store, top_n)
+
+        if st.button("Lancer l'expérience A/B"):
+            variant = random.choice(["A", "B"]) if variant_mode == "Affectation aléatoire" else "A et B"
+            ab_state = get_ab_state()
+
+            if variant == "A":
+                record_ab_event("A", "views")
+            elif variant == "B":
+                record_ab_event("B", "views")
+            else:
+                record_ab_event("A", "views")
+                record_ab_event("B", "views")
+
+            st.success(f"Expérience lancée : variante {variant}")
+
+            if variant_mode == "Affectation aléatoire":
+                st.markdown(f"### Variante assignée : {variant}")
+            else:
+                st.markdown("### Comparaison des variantes")
+
+            st.write("**Variante A — Recommandations collaboratives**")
+            recs_a = call_api("/recommend", {"user_id": user_id, "category": category, "num_recommendations": top_n})
+            if recs_a and recs_a.get("recommendations"):
+                for rec in recs_a["recommendations"]:
+                    st.write(f"- {rec['product_id']} — score {rec['score']:.2f}")
+            else:
+                st.warning("Aucune recommandation collaborative disponible")
+
+            st.write("**Variante B — Recommandations par popularité**")
+            for _, row in popularity_recs.iterrows():
+                st.write(f"- {row['asin']} — reviews {int(row['review_count'])}, note {row['avg_rating']:.2f}")
+
+            if st.button("Je préfère cette variante A", key="ab_pref_a"):
+                record_ab_event("A", "clicks")
+                st.success("Feedback enregistré pour la variante A")
+
+            if st.button("Je préfère cette variante B", key="ab_pref_b"):
+                record_ab_event("B", "clicks")
+                st.success("Feedback enregistré pour la variante B")
+
+        st.markdown("---")
+        st.subheader("Résultats A/B")
+        ab_state = get_ab_state()
+        summary = pd.DataFrame([
+            {"Variante": "A", "Vues": ab_state["A"]["views"], "Clics": ab_state["A"]["clicks"], "Taux de conversion": f"{(ab_state['A']['clicks'] / ab_state['A']['views'] * 100) if ab_state['A']['views'] else 0:.1f}%"},
+            {"Variante": "B", "Vues": ab_state["B"]["views"], "Clics": ab_state["B"]["clicks"], "Taux de conversion": f"{(ab_state['B']['clicks'] / ab_state['B']['views'] * 100) if ab_state['B']['views'] else 0:.1f}%"}
+        ])
+        st.dataframe(summary)
+
+        if st.button("Réinitialiser les résultats A/B"):
+            st.session_state.ab_test = {
+                'A': {'views': 0, 'clicks': 0},
+                'B': {'views': 0, 'clicks': 0}
+            }
+            st.success("Résultats réinitialisés")
+
+    except FileNotFoundError:
+        st.warning("Fichier de feature store introuvable pour la catégorie sélectionnée")
+    except Exception as e:
+        st.error(f"Erreur lors du test A/B: {e}")
 
 elif page == "À propos":
     st.header("À propos")
