@@ -39,7 +39,9 @@ class DataQualityMonitor:
             df = pd.read_csv(csv_path)
             
             # Conversion des dates si nécessaire
-            if 'review_timestamp' in df.columns:
+            if 'unixReviewTime' in df.columns:
+                df['review_timestamp'] = pd.to_datetime(df['unixReviewTime'], unit='s')
+            elif 'review_timestamp' in df.columns:
                 df['review_timestamp'] = pd.to_datetime(df['review_timestamp'])
             
             logger.info(f"Chargé {len(df):,} enregistrements")

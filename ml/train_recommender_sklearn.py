@@ -236,3 +236,22 @@ recommendations_df.to_csv(output_file, index=False, encoding="utf-8")
 
 print(f"\nFichier sauvegardé : {output_file}")
 print(recommendations_df.head(10))
+
+# =========================
+# 11. SAUVEGARDE DU MODÈLE
+# =========================
+import joblib
+
+model_data = {
+    'svd': svd,
+    'user_factors': user_factors,
+    'item_factors': item_factors,
+    'user_item_matrix': user_item_matrix,
+    'user_ids': user_item_matrix.index.tolist(),
+    'item_ids': item_ids,
+    'item_similarity': item_similarity_df
+}
+
+model_file = OUTPUT_DIR / "collaborative_filtering_model.pkl"
+joblib.dump(model_data, model_file)
+print(f"\nModèle sauvegardé : {model_file}")

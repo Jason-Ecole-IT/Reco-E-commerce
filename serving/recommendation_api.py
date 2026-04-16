@@ -117,7 +117,13 @@ async def startup_event():
     """Charger les modèles au démarrage"""
     logger.info("Chargement des modèles au démarrage")
     
+    # Charger le modèle de recommandation
+    model_path = "data/output"
+    model_loader.load_model(model_path, "collaborative_filtering_model")
+    
     # Charger les feature stores
+    model_loader.load_feature_store("data/clean_data/features/clothing_features_feature_store.csv", "clothing")
+    model_loader.load_feature_store("data/clean_data/features/electronics_features_feature_store.csv", "electronics")
     model_loader.load_feature_store(
         "data/processed/electronics_features_feature_store.csv",
         "electronics"
@@ -159,6 +165,59 @@ def cache_set(key: str, value: dict, ttl: int = 3600):
     except Exception as e:
         logger.warning(f"Erreur cache set: {e}")
 
+def generate_recommendations(user_id: str, top_n: int, model_data: dict) -> list:
+    """Générer des recommandations pour un utilisateur"""
+    try:
+        user_factors = model_data['user_factors']
+        item_factors = model_data['item_factors']
+        user_ids = model_data['user_ids']
+        item_ids = model_data['item_ids']
+        item_similarity = model_data['item_similarity']
+        
+        if user_id not in user_ids:
+            # Cold start: retourner les produits les plus populaires
+            popular_items = (
+                model_data['user_item_matrix']
+                .sum(axis=0)
+                .sort_values(ascending=False)
+                .head(top_n)
+            )
+            return [
+                {
+                    "product_id": item_ids[idx],
+                    "score": float(score),
+                    "reason": "popular_fallback"
+                }
+                for idx, score in popular_items.items()
+            ]
+        
+        # Trouver l'index de l'utilisateur
+        user_idx = user_ids.index(user_id)
+        user_vector = user_factors[user_idx]
+        
+        # Calculer les scores de similarité
+        scores = {}
+        for item_idx, item_id in enumerate(item_ids):
+            item_vector = item_factors[item_idx]
+            score = np.dot(user_vector, item_vector)
+            scores[item_id] = score
+        
+        # Trier et retourner les top N
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        
+        return [
+            {
+                "product_id": product_id,
+                "score": float(score),
+                "reason": "collaborative_filtering"
+            }
+            for product_id, score in sorted_scores[:top_n]
+        ]
+        
+    except Exception as e:
+        logger.error(f"Erreur génération recommandations: {e}")
+        return []
+
 # Endpoints de l'API
 @app.get("/")
 async def root():
@@ -193,25 +252,30 @@ async def get_recommendations(request: RecommendationRequest):
             logger.info(f"Cache hit pour {cache_key}")
             return cached_result
         
-        # Récupérer le feature store
-        feature_store = model_loader.get_feature_store(request.category)
-        if not feature_store:
-            raise HTTPException(status_code=404, detail=f"Category {request.category} not found")
+        # Récupérer le modèle
+        model = model_loader.get_model("collaborative_filtering_model")
+        if not model:
+            raise HTTPException(status_code=500, detail="Model not loaded")
         
-        # Filtrer les produits
-        products = feature_store['asin'].unique()
+        # Générer les recommandations
+        recommendations = generate_recommendations(
+            request.user_id, 
+            request.num_recommendations, 
+            model
+        )
         
-        # Simulation de recommandations (basée sur popularité)
-        product_popularity = feature_store.groupby('asin')['overall'].agg(['count', 'mean'])
-        product_popularity = product_popularity.sort_values(['count', 'mean'], ascending=False)
+        result = {
+            "user_id": request.user_id,
+            "category": request.category,
+            "recommendations": recommendations,
+            "timestamp": datetime.now().isoformat()
+        }
         
-        recommendations = []
-        for product_id in product_popularity.head(request.num_recommendations).index:
-            recommendations.append({
-                "product_id": product_id,
-                "score": float(product_popularity.loc[product_id, 'count']),
-                "avg_rating": float(product_popularity.loc[product_id, 'mean'])
-            })
+        # Mettre en cache
+        cache_set(cache_key, result)
+        
+        logger.info(f"Recommandations générées pour {request.user_id}")
+        return result
         
         result = {
             "user_id": request.user_id,
