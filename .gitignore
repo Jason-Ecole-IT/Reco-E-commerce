@@ -1,0 +1,117 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PySpark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (keep structure, ignore large files)
+data/raw/*.json
+data/raw/*.json.gz
+data/processed/*.parquet
+data/processed/*.delta
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker
+.dockerignore
+
+# Secrets
+.env
+.env.local
+.env.*.local
+secrets/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Redis dump
+dump.rdb
+
+# Node.js (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Spark specific
+*.jar
+target/
+
+# Feast
+feature_repo/
+
+# Great Expectations
+great_expectations/checkpoints/
+great_expectations/expectations/
+great_expectations/uncommitted/
+
+# Documentation build
+docs/_build/
+
+# Backup files
+*.bak
+*.backup

@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  # API de recommandation
+  recommendation-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recommendation-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=INFO
+    depends_on:
+      - redis
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis pour le cache
+  redis:
+    image: redis:7-alpine
+    container_name: recommendation-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: recommendation-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - recommendation-api
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+
+  # Prometheus pour monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: recommendation-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+
+  # Grafana pour visualisation
+  grafana:
+    image: grafana/grafana:latest
+    container_name: recommendation-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - prometheus
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+
+  # MLflow pour tracking expérimentations
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.8.0
+    container_name: recommendation-mlflow
+    ports:
+      - "5000:5000"
+    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlflow-artifacts
+    volumes:
+      - mlflow-data:/mlflow
+      - ./mlflow-artifacts:/mlflow-artifacts
+    networks:
+      - recommendation-network
+    restart: unless-stopped
+
+networks:
+  recommendation-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+  mlflow-data:

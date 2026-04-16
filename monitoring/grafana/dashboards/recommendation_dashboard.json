@@ -1,0 +1,67 @@
+{
+  "dashboard": {
+    "title": "E-commerce Recommendation System",
+    "uid": "recommendation-dashboard",
+    "tags": ["recommendation", "ecommerce", "ml"],
+    "timezone": "browser",
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(fastapi_http_requests_total[1m])",
+            "legendFormat": "{{method}} {{path}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Request Latency",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(fastapi_http_request_duration_seconds_bucket[1m]))",
+            "legendFormat": "P95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(fastapi_http_request_duration_seconds_bucket[1m]))",
+            "legendFormat": "P99"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(fastapi_http_requests_total{status=~\"5..\"}[1m])",
+            "legendFormat": "5xx Errors"
+          },
+          {
+            "expr": "rate(fastapi_http_requests_total{status=~\"4..\"}[1m])",
+            "legendFormat": "4xx Errors"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Cache Hit Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(cache_hits_total[1m]) / rate(cache_requests_total[1m])",
+            "legendFormat": "Cache Hit Rate"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      }
+    ]
+  }
+}

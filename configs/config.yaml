@@ -1,0 +1,52 @@
+# Configuration du projet Moteur de Recommandation E-commerce
+
+project:
+  name: "moteur_recommandation"
+  version: "1.0.0"
+  description: "Moteur de recommandation e-commerce avec PySpark ALS"
+
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  
+  # Amazon Reviews datasets
+  amazon_reviews:
+    electronics_url: "http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz"
+    clothing_url: "http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Clothing_Shoes_and_Jewelry_5.json.gz"
+    
+spark:
+  app_name: "recommendation_engine"
+  master: "local[*]"
+  config:
+    "spark.sql.adaptive.enabled": "true"
+    "spark.sql.adaptive.coalescePartitions.enabled": "true"
+    "spark.sql.adaptive.advisoryPartitionSizeInBytes": "128MB"
+    "spark.serializer": "org.apache.spark.serializer.KryoSerializer"
+
+model:
+  als:
+    rank: 50
+    max_iter: 10
+    reg_param: 0.1
+    alpha: 1.0
+    cold_start_strategy: "drop"
+  
+  evaluation:
+    test_size: 0.2
+    random_state: 42
+    cv_folds: 3
+
+serving:
+  api_host: "0.0.0.0"
+  api_port: 8000
+  redis_host: "localhost"
+  redis_port: 6379
+  cache_ttl: 3600  # 1 heure
+
+monitoring:
+  mlflow_tracking_uri: "http://localhost:5000"
+  experiment_name: "recommendation_engine"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
