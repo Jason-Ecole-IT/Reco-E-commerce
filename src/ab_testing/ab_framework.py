@@ -67,7 +67,7 @@ class ABTestingFramework:
                 "status": "active",
                 "created_at": datetime.now(),
                 "assignments": {},
-                "metrics": {metric: [] for metric in config.metrics}
+                "metrics": {metric: {"A": [], "B": []} for metric in config.metrics}
             }
             
             logger.info(f"Test A/B créé: {config.test_name} (ID: {test_id})")
@@ -280,8 +280,15 @@ class ABTestingFramework:
             for metric_name in config.metrics:
                 if metric_name in test_data["metrics"]:
                     metric_data = test_data["metrics"][metric_name]
-                    group_a_values = [item["value"] for item in metric_data.get("A", [])]
-                    group_b_values = [item["value"] for item in metric_data.get("B", [])]
+                    logger.info(f"Metric data type for {metric_name}: {type(metric_data)}")
+                    
+                    if metric_data is not None and isinstance(metric_data, dict):
+                        group_a_values = [item["value"] for item in metric_data.get("A", [])]
+                        group_b_values = [item["value"] for item in metric_data.get("B", [])]
+                    else:
+                        logger.error(f"Metric data for {metric_name} is not a dict: {metric_data}")
+                        group_a_values = []
+                        group_b_values = []
                     
                     if len(group_a_values) >= config.min_sample_size and len(group_b_values) >= config.min_sample_size:
                         # Effectuer le test statistique
@@ -303,7 +310,7 @@ class ABTestingFramework:
             # Déterminer le statut global
             significant_metrics = [
                 m for m in results["metrics_analysis"].values()
-                if m.get("is_significant", False) and m.get("sample_size_sufficient", False)
+                if isinstance(m, dict) and m.get("is_significant", False) and m.get("sample_size_sufficient", False)
             ]
             
             if significant_metrics:

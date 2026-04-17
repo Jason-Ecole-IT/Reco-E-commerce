@@ -195,13 +195,10 @@ async def get_recommendations(request: RecommendationRequest):
         
         # Récupérer le feature store
         feature_store = model_loader.get_feature_store(request.category)
-        if not feature_store:
+        if feature_store is None or feature_store.empty:
             raise HTTPException(status_code=404, detail=f"Category {request.category} not found")
         
-        # Filtrer les produits
-        products = feature_store['asin'].unique()
-        
-        # Simulation de recommandations (basée sur popularité)
+        # Recommandations basées sur la popularité globale
         product_popularity = feature_store.groupby('asin')['overall'].agg(['count', 'mean'])
         product_popularity = product_popularity.sort_values(['count', 'mean'], ascending=False)
         
@@ -244,13 +241,13 @@ async def predict_rating(request: RatingPredictionRequest):
         
         # Récupérer le feature store
         feature_store = model_loader.get_feature_store(request.category)
-        if not feature_store:
+        if feature_store is None or feature_store.empty:
             raise HTTPException(status_code=404, detail=f"Category {request.category} not found")
         
         # Trouver des données similaires
         product_data = feature_store[feature_store['asin'] == request.product_id]
         
-        if len(product_data) == 0:
+        if product_data.empty:
             # Produit non trouvé, retourner la moyenne globale
             global_avg = feature_store['overall'].mean()
             result = {
@@ -353,7 +350,7 @@ async def get_products(category: str, limit: int = 100):
     """Lister les produits d'une catégorie"""
     try:
         feature_store = model_loader.get_feature_store(category)
-        if not feature_store:
+        if feature_store is None or feature_store.empty:
             raise HTTPException(status_code=404, detail=f"Category {category} not found")
         
         products = feature_store['asin'].unique()[:limit]
